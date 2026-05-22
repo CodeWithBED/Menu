@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Menú · Nodulis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#0a0a0a;color:#e8dcc8;font-family:Georgia,serif;min-height:100vh;padding-bottom:90px}
+button{cursor:pointer;font-family:inherit;border:none;background:none;outline:none}
+
+/* HEADER */
+.hdr{background:#111;border-bottom:1px solid #222;padding:18px 16px 0;position:sticky;top:0;z-index:50}
+.hdr-inner{max-width:480px;margin:0 auto}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.brand-s{font-size:9px;letter-spacing:4px;color:#888;text-transform:uppercase;margin-bottom:2px;font-family:sans-serif}
+.brand{font-size:20px;font-weight:bold;color:#c8a96e}
+.week-lbl{font-size:9px;letter-spacing:2px;color:#888;text-transform:uppercase;font-family:sans-serif}
+.week-btn{margin-top:4px;display:block;border:1px solid #3a3a3a;color:#888;padding:3px 10px;border-radius:20px;font-size:10px;letter-spacing:1px;font-family:sans-serif}
+.tabs{display:flex;gap:3px}
+.tab{flex:1;padding:8px 0;border-radius:6px 6px 0 0;font-size:8px;letter-spacing:1px;text-transform:uppercase;border:1px solid #222;border-bottom:none;text-align:center;color:#666;font-weight:bold;font-family:sans-serif;transition:.2s}
+.tab.active{background:#c8a96e;color:#0a0a0a;border-color:#c8a96e}
+
+/* CONTENT */
+.content{max-width:480px;margin:0 auto;padding:0 14px}
+.view{animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* DAY BAR */
+.day-bar{display:flex;gap:5px;margin-top:18px;overflow-x:auto;padding-bottom:4px}
+.day-bar::-webkit-scrollbar{display:none}
+.day-btn{flex-shrink:0;padding:7px 12px;border-radius:7px;font-size:10px;letter-spacing:1px;border:1px solid #2a2a2a;color:#777;font-family:sans-serif;transition:.2s}
+.day-btn.active{background:#c8a96e;color:#0a0a0a;font-weight:bold;border-color:#c8a96e}
+.day-btn.creative{border-color:#3a2a4a;color:#9a7ab8}
+.day-btn.creative.active{background:#7a5a9a;color:#fff;border-color:#7a5a9a}
+
+/* DAY HEADER */
+.day-hdr{margin-top:18px;margin-bottom:14px;display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.day-title{font-size:26px;color:#f0e8d8;font-weight:bold}
+.tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid;font-family:sans-serif}
+.tag-gym{background:#1e1a0e;color:#c8a96e;border-color:#3a2e10}
+.tag-marina{background:#0e1e14;color:#6abf8a;border-color:#1e4a2a}
+.tag-creative{background:#1a0e2a;color:#b08ad8;border-color:#3a1a5a}
+
+/* MACROS */
+.macros{display:flex;gap:8px;margin-bottom:18px}
+.macro{flex:1;border-radius:10px;padding:10px 6px;text-align:center}
+.macro-val{font-size:17px;font-weight:bold;font-family:sans-serif}
+.macro-lbl{font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-top:3px;font-weight:bold;font-family:sans-serif}
+
+/* MEAL CARD */
+.meal-card{background:#141414;border:1px solid #222;border-radius:12px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden;transition:.15s}
+.meal-accent{position:absolute;left:0;top:0;width:3px;height:100%;border-radius:3px 0 0 3px}
+.meal-inner{padding-left:10px}
+.meal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.meal-name{font-size:14px;font-weight:bold;color:#e8d8a8;line-height:1.4}
+.meal-prot-box{text-align:right;flex-shrink:0;margin-left:8px}
+.meal-prot{font-size:15px;font-weight:bold;color:#c8a96e;font-family:sans-serif}
+.meal-prot-lbl{font-size:9px;color:#888;font-family:sans-serif}
+.meal-item{font-size:13px;color:#d0c8b8;font-weight:600;padding:3px 0 3px 10px;border-left:1px solid #333;margin-left:2px;margin-bottom:2px;line-height:1.4;font-family:sans-serif}
+.meal-carbs{font-size:9px;color:#666;margin-top:8px;letter-spacing:2px;font-family:sans-serif}
+
+/* SUBSTITUTES */
+.sub-section{margin-top:18px;margin-bottom:18px}
+.sec-lbl{font-size:9px;letter-spacing:3px;color:#888;text-transform:uppercase;margin-bottom:12px;font-family:sans-serif}
+.sub-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sub-chip{padding:6px 14px;border-radius:20px;font-size:11px;border:1px solid #2a2a2a;color:#888;font-family:sans-serif;transition:.15s}
+.sub-chip.unavail{background:#1e1208;border-color:#5a3a1a;color:#c8a96e}
+.sub-panel{background:#111;border:1px solid #2e1e0a;border-radius:10px;padding:14px;margin-top:10px}
+.sub-panel-lbl{font-size:9px;letter-spacing:2px;color:#aa8844;text-transform:uppercase;margin-bottom:10px;font-family:sans-serif}
+.sub-opt{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1e1a10}
+.sub-opt:last-child{border-bottom:none}
+.sub-opt-name{font-size:13px;color:#d4b870}
+.sub-opt-qty{font-size:11px;color:#887840;margin-top:2px;font-family:sans-serif}
+.sub-opt-nota{font-size:11px;color:#aa8844;margin-left:8px;flex-shrink:0;font-family:sans-serif}
+
+/* RULES */
+.rules-box{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:10px;padding:14px;margin-top:8px}
+.rules-lbl{font-size:9px;letter-spacing:3px;color:#666;text-transform:uppercase;margin-bottom:10px;font-family:sans-serif}
+.rule{font-size:11px;color:#888;padding:4px 0 4px 10px;border-left:1px solid #2a2a2a;margin-bottom:4px;line-height:1.4;font-family:sans-serif}
+
+/* WHATSAPP */
+.wha-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;background:#0a1a0a;border:1px solid #2a4a2a;border-radius:10px;color:#6abf8a;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:20px;font-weight:bold;font-family:sans-serif}
+
+/* V-HEADER */
+.v-hdr{margin-top:18px;margin-bottom:16px}
+.v-title{font-size:24px;color:#f0e8d8;font-weight:bold}
+.v-sub{font-size:10px;color:#888;letter-spacing:2px;margin-top:4px;font-family:sans-serif;text-transform:uppercase}
+
+/* INGREDIENTES VIEW */
+.ing-card{background:#141414;border:1px solid #222;border-radius:12px;overflow:hidden;margin-bottom:10px}
+.ing-meal-hdr{background:#1a1a1a;padding:10px 14px;font-size:10px;color:#aa8844;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid #222;font-family:sans-serif}
+.ing-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid #181818}
+.ing-row:last-child{border-bottom:none}
+.ing-name{font-size:13px;color:#d4c4a0;font-family:sans-serif}
+.ing-name.crossed{color:#444;text-decoration:line-through}
+.ing-amt{font-size:14px;font-weight:bold;color:#c8a96e;font-family:sans-serif}
+.ing-unit{font-size:9px;color:#666;margin-top:1px;font-family:sans-serif}
+
+/* PERSONS BAR */
+.persons-bar{display:flex;align-items:center;gap:12px;background:#141414;border:1px solid #222;border-radius:10px;padding:12px 16px;margin-bottom:16px}
+.persons-lbl{font-size:10px;letter-spacing:2px;color:#888;text-transform:uppercase;flex:1;font-family:sans-serif}
+.persons-val{font-size:20px;font-weight:bold;color:#c8a96e;min-width:28px;text-align:center;font-family:sans-serif}
+.persons-btn{width:32px;height:32px;border-radius:8px;background:#1e1e1e;border:1px solid #2a2a2a;color:#c8a96e;font-size:18px;display:flex;align-items:center;justify-content:center;font-weight:bold}
+
+/* FREQ TOGGLE */
+.freq-toggle{display:flex;gap:8px;margin-bottom:16px}
+.freq-btn{flex:1;padding:9px 0;border-radius:8px;font-size:10px;letter-spacing:2px;text-transform:uppercase;border:1px solid #222;color:#888;font-weight:bold;font-family:sans-serif;transition:.2s}
+.freq-btn.active{background:#c8a96e;color:#0a0a0a;border-color:#c8a96e}
+
+/* SHOPPING */
+.shop-card{background:#141414;border:1px solid #222;border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.shop-cat{font-size:9px;letter-spacing:3px;color:#c8a96e;text-transform:uppercase;margin-bottom:12px;font-family:sans-serif;font-weight:bold}
+.shop-row{display:flex;align-items:center;padding:8px 0;border-bottom:1px solid #181818;cursor:pointer;transition:.1s}
+.shop-row:last-child{border-bottom:none}
+.shop-row.chk .shop-name{text-decoration:line-through;color:#444}
+.shop-row.chk .shop-qty{color:#333}
+.chk-box{width:20px;height:20px;border:1.5px solid #333;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:10px;font-size:10px;color:#c8a96e;transition:.15s}
+.chk-box.done{border-color:#5a4a20;background:#1e1a0a}
+.shop-name{font-size:13px;color:#bba880;flex:1;font-family:sans-serif}
+.shop-qty{font-size:13px;font-weight:bold;color:#c8a96e;font-family:sans-serif;text-align:right;white-space:nowrap;margin-left:8px}
+.shop-qty.su{color:#555;font-weight:normal}
+.monthly-card{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.monthly-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #141414}
+.monthly-row:last-child{border-bottom:none}
+.monthly-name{font-size:13px;color:#666;font-family:sans-serif}
+.monthly-nota{font-size:10px;color:#444;font-family:sans-serif}
+.empty-shop{text-align:center;padding:30px 20px;color:#555;font-size:13px;letter-spacing:1px;font-family:sans-serif;line-height:2}
+
+/* SUGERENCIAS */
+.edit-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.edit-mode-btn{font-size:9px;letter-spacing:2px;color:#666;border:1px solid #2a2a2a;padding:5px 12px;border-radius:20px;text-transform:uppercase;font-family:sans-serif}
+.edit-mode-btn.on{color:#c86868;border-color:#5a1a1a}
+.cat-block{margin-bottom:18px}
+.cat-lbl{font-size:9px;letter-spacing:3px;color:#c8a96e;text-transform:uppercase;margin-bottom:10px;font-weight:bold;font-family:sans-serif;display:flex;justify-content:space-between;align-items:center}
+.cat-all{font-size:9px;color:#666;border:1px solid #222;padding:3px 8px;border-radius:12px;font-family:sans-serif}
+.ing-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ing-chip{padding:7px 14px;border-radius:20px;font-size:12px;border:1px solid #2a2a2a;color:#aaa;font-family:sans-serif;transition:.15s;font-weight:500}
+.ing-chip.on{background:#1a3a1a;border-color:#3a6a3a;color:#8acf78}
+.ing-chip.del-mode{border-color:#2a1a1a;color:#664444}
+.ing-chip.del-mode.on{background:#3a1208;border-color:#6a2a1a;color:#c86848}
+.add-row{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.add-input{flex:1;min-width:120px;background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:9px 12px;color:#e8dcc8;font-size:12px;font-family:sans-serif;outline:none}
+.add-input::placeholder{color:#444}
+.add-cat-sel{background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:9px 8px;color:#888;font-size:10px;font-family:sans-serif;outline:none}
+.add-btn{background:#1a3a1a;border:1px solid #3a6a3a;color:#6acf68;padding:9px 14px;border-radius:8px;font-size:12px;font-weight:bold;font-family:sans-serif}
+
+/* RECIPE RESULTS */
+.results-hdr{font-size:9px;letter-spacing:3px;color:#c8a96e;text-transform:uppercase;margin:20px 0 12px;font-weight:bold;font-family:sans-serif}
+.recipe-card{background:#141414;border:1px solid #222;border-radius:12px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden;transition:.15s}
+.recipe-card.full{border-left:3px solid #3a6a3a}
+.recipe-card.partial{border-left:3px solid #3a3a1a}
+.recipe-badge{position:absolute;top:0;right:0;font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:0 12px 0 8px;font-weight:bold;font-family:sans-serif}
+.badge-full{background:#1a3a1a;color:#6acf68}
+.badge-partial{background:#1a1a0a;color:#aaa820}
+.recipe-name{font-size:15px;font-weight:bold;color:#f0e8d8;margin-bottom:2px;margin-right:90px}
+.recipe-cat{font-size:9px;color:#888;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-family:sans-serif}
+.r-macros{display:flex;gap:6px;margin-bottom:12px}
+.r-mac{flex:1;background:#111;border-radius:6px;padding:8px 4px;text-align:center;border:1px solid #1e1e1e}
+.r-mac-val{font-size:14px;font-weight:bold;color:#c8a96e;font-family:sans-serif}
+.r-mac-lbl{font-size:8px;color:#666;letter-spacing:1px;text-transform:uppercase;margin-top:1px;font-family:sans-serif}
+.r-ing-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #181818;font-size:12px;font-family:sans-serif}
+.r-ing-row:last-child{border-bottom:none}
+.r-ing-name{color:#bbb}
+.r-ing-name.miss{color:#664444}
+.r-ing-amt{color:#c8a96e;font-weight:bold}
+.recipe-missing{font-size:10px;color:#886644;margin-top:8px;padding:6px 10px;background:#160e08;border-radius:6px;border:1px solid #2a1a10;font-family:sans-serif;line-height:1.6}
+.recipe-wha{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;background:#0a1a0a;border:1px solid #2a4a2a;border-radius:8px;color:#6abf8a;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-top:10px;font-weight:bold;font-family:sans-serif}
+.no-sel{text-align:center;padding:30px 20px;color:#555;font-size:12px;letter-spacing:1px;font-family:sans-serif;line-height:2}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const APP_URL='https://codewithbed.github.io/Menu';
+const DAYS_FULL=['Lunes','Martes','Miercoles','Jueves','Viernes'];
+const CREATIVE_DAYS=[1,2,3]; // Martes, Miercoles, Jueves (0-indexed)
+
+const SUB={
+  aguacate:{emoji:'🥑',label:'Aguacate',opts:[{n:'Queso seco/cuajada extra',c:'+50g',nota:'~10g grasa'},{n:'Huevo adicional',c:'+1 unidad',nota:'+5g grasa'},{n:'Aceite de oliva',c:'1 cda',nota:'~14g grasa'},{n:'Mantequilla',c:'para saltear',nota:'~12g grasa'},{n:'Tocino extra',c:'2-3 tiras',nota:'~10g grasa'}]},
+  repollo:{emoji:'🥬',label:'Repollo',opts:[{n:'Lechuga',c:'1/4 unidad',nota:'Misma funcion'},{n:'Chiltoma en tiras',c:'1 unidad',nota:'Bajo en carbs'},{n:'Chayote tierno',c:'1/4 unidad',nota:'Saltear'}]},
+  pepino:{emoji:'🥒',label:'Pepino',opts:[{n:'Tomate extra',c:'+1 unidad',nota:'Similar'},{n:'Chiltoma',c:'1/2 unidad',nota:'En rodajas'}]},
+  brocoli:{emoji:'🥦',label:'Brocoli',opts:[{n:'Chiltoma salteada',c:'1 unidad',nota:'Con ajo'},{n:'Vainitas',c:'1 taza',nota:'Al vapor'},{n:'Chayote',c:'1/4 unidad',nota:'Igual'}]},
+  tomate:{emoji:'🍅',label:'Tomate',opts:[{n:'Chiltoma en cubos',c:'1 unidad',nota:'Similar'},{n:'Pepino extra',c:'1/2 unidad',nota:'Frescura'}]},
+};
+
+/* ===== MENU DATA ===== */
+/* Estructura: Almuerzo=carne roja, Cena=carne blanca/proteina */
+/* Lunes/Viernes=simple, Martes/Miercoles/Jueves=creativo */
+const W1=[
+  /* LUNES - simple */
+  {gymDay:true,creative:false,comidas:[
+    {nombre:'Desayuno · Pre-entreno',icono:'🍳',p:26,c:5,
+     desc:['4 huevos revueltos con chiltoma y cebolla','1/2 aguacate'],
+     ing:[{n:'Huevos',c:'4',u:'unidades'},{n:'Chiltoma',c:'1/2',u:'unidad'},{n:'Cebolla',c:'1/4',u:'unidad'},{n:'Aguacate',c:'1/2',u:'unidad',sub:'aguacate'}]},
+    {nombre:'Almuerzo',icono:'🥩',p:42,c:6,
+     desc:['180g bistec de res a la plancha','Ensalada de repollo, tomate y pepino con limon'],
+     ing:[{n:'Bistec de res',c:'0.40',u:'lbs'},{n:'Repollo',c:'1/4',u:'unidad',sub:'repollo'},{n:'Tomate',c:'1',u:'unidad',sub:'tomate'},{n:'Pepino',c:'1/2',u:'unidad',sub:'pepino'},{n:'Limon',c:'1',u:'unidad'}]},
+    {nombre:'Cena',icono:'🍗',p:50,c:5,
+     desc:['200g pechuga de pollo a la plancha','Ensalada de lechuga, tomate y pepino'],
+     ing:[{n:'Pechuga de pollo',c:'0.44',u:'lbs'},{n:'Lechuga',c:'1/4',u:'unidad'},{n:'Tomate',c:'1',u:'unidad',sub:'tomate'},{n:'Pepino',c:'1/2',u:'unidad',sub:'pepino'},{n:'Limon',c:'1',u:'unidad'}]},
+  ]},
+  /* MARTES - creativo */
+  {gymDay:false,creative:true,comidas:[
+    {nombre:'Desayuno',icono:'🍳',p:36,c:3,
+     desc:['Revuelta de huevos con jamon de pavo, chiltoma y queso seco','3 huevos batidos, jamon en cubos, chiltoma picada, queso rallado - todo en sarten'],
+     ing:[{n:'Huevos',c:'3',u:'unidades'},{n:'Jamon de pavo',c:'60g',u:''},{n:'Chiltoma',c:'1/2',u:'unidad'},{n:'Queso seco',c:'30g',u:''}]},
+    {nombre:'Almuerzo',icono:'🥩',p:42,c:7,
+     desc:['Lomo de res en tiras con cebolla, tomate y chile jalapeno','Saltear lomo en tiras con cebolla, tomate y chile jalapeno en sarten'],
+     ing:[{n:'Lomo de res',c:'0.40',u:'lbs'},{n:'Cebolla',c:'1/2',u:'unidad'},{n:'Tomate',c:'1',u:'unidad',sub:'tomate'},{n:'Chile jalapeno',c:'1',u:'unidad'},{n:'Ajo',c:'2',u:'dientes'},{n:'Aceite de oliva',c:'1 cda',u:''}]},
+    {nombre:'Cena',icono:'🍗',p:40,c:8,
+     desc:['Pollo desmenuzado con chayote salteado en ajo y mantequilla','Cocer pollo, desmenuzar y saltear con chayote en rodajas, ajo y mantequilla'],
+     ing:[{n:'Muslo de pollo',c:'0.40',u:'lbs'},{n:'Chayote',c:'1/2',u:'unidad'},{n:'Ajo',c:'3',u:'dientes'},{n:'Mantequilla',c:'1 cda',u:''},{n:'Limon',c:'1',u:'unidad'}]},
+  ]},
+  /* MIERCOLES - creativo */
+  {gymDay:true,creative:true,comidas:[
+    {nombre:'Desayuno · Pre-entreno',icono:'🍳',p:30,c:3,
+     desc:['Huevos revueltos con chorizo criollo y chiltoma','Dorar chorizo en sarten, agregar huevos batidos y chiltoma picada'],
+     ing:[{n:'Huevos',c:'3',u:'unidades'},{n:'Chorizo criollo',c:'60g',u:''},{n:'Chiltoma',c:'1/2',u:'unidad'},{n:'Aceite',c:'1 cdta',u:''}]},
+    {nombre:'Almuerzo',icono:'🥩',p:40,c:7,
+     desc:['Higado de res a la plancha con cebolla caramelizada y tomate','Sellar higado en plancha, aparte caramelizar cebolla y tomate en sarten'],
+     ing:[{n:'Higado de res',c:'0.40',u:'lbs'},{n:'Cebolla',c:'1',u:'unidad'},{n:'Tomate',c:'1',u:'unidad',sub:'tomate'},{n:'Ajo',c:'2',u:'dientes'},{n:'Aceite de oliva',c:'1 cda',u:''}]},
+    {nombre:'Cena',icono:'🐟',p:40,c:3,
+     desc:['Camarones salteados en mantequilla con ajo, limon y cilantro','Saltear camarones en mantequilla caliente con ajo picado, limon y cilantro fresco'],
+     ing:[{n:'Camaron',c:'0.44',u:'lbs'},{n:'Mantequilla',c:'1 cda',u:''},{n:'Ajo',c:'4',u:'dientes'},{n:'Limon',c:'1',u:'unidad'},{n:'Cilantro',c:'1/4',u:'manojo'}]},
+  ]},
+  /* JUEVES - creativo */
+  {gymDay:false,creative:true,comidas:[
+    {nombre:'Desayuno',icono:'🍳',p:36,c:3,
+     desc:['Omelette de huevos con jamon de pavo y chile jalapeno','Batir huevos, hacer omelette en sarten, rellenar con jamon y chile en rodajas'],
+     ing:[{n:'Huevos',c:'3',u:'unidades'},{n:'Jamon de pavo',c:'80g',u:''},{n:'Chile jalapeno',c:'1',u:'unidad'},{n:'Aceite',c:'1 cdta',u:''}]},
+    {nombre:'Almuerzo',icono:'🥩',p:46,c:6,
+     desc:['Churrasco en tiras sobre plato de tomate, aguacate y aceitunas','Sellar churrasco en plancha, cortar en tiras, servir sobre cama de tomate, aguacate y aceitunas con limon'],
+     ing:[{n:'Churrasco',c:'0.44',u:'lbs'},{n:'Tomate',c:'1',u:'unidad',sub:'tomate'},{n:'Aguacate',c:'1/2',u:'unidad',sub:'aguacate'},{n:'Aceitunas',c:'1/4',u:'taza'},{n:'Limon',c:'1',u:'unidad'}]},
+    {nombre:'Cena',icono:'🍗',p:40,c:5,
+     desc:['Muslo de pollo salteado con chiltoma, cebolla y cilantro','Dorar muslo en sarten con ajo, agregar chiltoma y cebolla en tiras, finalizar con cilantro y limon'],
+     ing:[{n:'Muslo de pollo',c:'0.44',u:'lbs'},{n:'Chiltoma',c:'1',u:'unidad'},{n:'Cebolla',c:'1/2',u:'unidad'},{n:'Cilantro',c:'1/4',u:'manojo'},{n:'Limon',c:'1',u:'unidad'},{n:'Ajo',c:'2',u:'dientes'}]},
+  ]},
+  /* VIERNES - simple */
+  {gymDay:true,creative:false,comidas:[
+    {nombre:'Desayuno · Pre-entreno',icono:'🍳',p:36,c:2,
+     desc:['Omelette de 3 huevos con jamon de pavo','30g queso seco'],
+     ing:[{n:'Huevos',c:'3',u:'unidades'},{n:'Jamon de pavo',c:'80g',u:''},{n:'Queso seco',c:'30g',u:''}]},
+    {nombre:'Almuerzo',icono:'🥩',p:42,c:3,
+     desc:['150g carne molida de res con ajo y chiltoma','2 huevos revueltos + 50g cuajada'],
+     ing:[{n:'Carne molida de res',c:'0.33',u:'lbs'},{n:'Huevos',c:'2',u:'unidades'},{n:'Cuajada',c:'50g',u:''},{n:'Ajo',c:'2',u:'dientes'},{n:'Chiltoma',c:'1/2',u:'unidad'}]},
+    {nombre:'Cena',icono:'🐟',p:40,c:3,
+     desc:['Tilapia a la plancha con ajo, limon y cilantro','Pepino en rodajas con limon'],
+     ing:[{n:'Tilapia',c:'0.44',u:'lbs'},{n:'Ajo',c:'2',u:'dientes'},{n:'Limon',c:'1',u:'unidad'},{n:'Cilantro',c:'1/4',u:'manojo'},{n:'Pepino',c:'1',u:'unidad',sub:'pepino'}]},
+  ]},
+];
+
+/* SEMANA 2 - igual que W1 excepto Miercoles almuerzo = marina */
+const W2=JSON.parse(JSON.stringify(W1));
+W2[2].marina=true;
+W2[2].comidas[1]={nombre:'Almuerzo · Marina',icono:'🐟',p:34,c:5,
+  desc:['Atun en lata salteado con tomate, chiltoma, aceitunas y limon','Mezclar atun escurrido con tomate picado, chiltoma, aceitunas y jugo de limon en sarten caliente'],
+  ing:[{n:'Atun en lata',c:'1',u:'lata'},{n:'Tomate',c:'1',u:'unidad',sub:'tomate'},{n:'Chiltoma',c:'1/2',u:'unidad'},{n:'Aceitunas',c:'1/4',u:'taza'},{n:'Limon',c:'1',u:'unidad'}]};
+const MENUS={week1:W1,week2:W2};
+
+/* ===== INGREDIENT DATABASE ===== */
+const CATS=[
+  {key:'res',emoji:'🥩',label:'Res',items:[
+    {n:'Carne molida de res',q:0.66,u:'lbs'},{n:'Falda de res',q:0.4,u:'lbs'},{n:'Lomo de res',q:0.4,u:'lbs'},
+    {n:'Solomo',q:0.4,u:'lbs'},{n:'Churrasco',q:0.44,u:'lbs'},{n:'Puyazo',q:0.4,u:'lbs'},
+    {n:'Costilla de res',q:0.5,u:'lbs'},{n:'Higado de res',q:0.4,u:'lbs'},{n:'Bistec de res',q:0.4,u:'lbs'},
+  ]},
+  {key:'cerdo',emoji:'🐷',label:'Cerdo',items:[
+    {n:'Lomo de cerdo',q:0.44,u:'lbs'},{n:'Chuleta de cerdo',q:0.44,u:'lbs'},
+    {n:'Chorizo criollo',q:0.13,u:'lbs'},{n:'Tocino',q:1,u:'paquete'},
+  ]},
+  {key:'ave',emoji:'🍗',label:'Ave',items:[
+    {n:'Pechuga de pollo',q:0.44,u:'lbs'},{n:'Muslo de pollo',q:0.84,u:'lbs'},{n:'Jamon de pavo',q:0.48,u:'lbs'},
+  ]},
+  {key:'mariscos',emoji:'🐟',label:'Mariscos y Pescados',items:[
+    {n:'Camaron',q:0.44,u:'lbs'},{n:'Corvina',q:0.44,u:'lbs'},{n:'Tilapia',q:0.44,u:'lbs'},
+    {n:'Robalo',q:0.44,u:'lbs'},{n:'Pargo',q:0.44,u:'lbs'},{n:'Atun en lata',q:1,u:'lata'},
+    {n:'Sardinas en lata',q:2,u:'latas'},{n:'Langostinos',q:0.44,u:'lbs'},
+  ]},
+  {key:'lacteos',emoji:'🥚',label:'Lacteos y Huevos',items:[
+    {n:'Huevos',q:13,u:'unidades'},{n:'Yogur griego',q:3,u:'unidades'},{n:'Requesón',q:0.33,u:'lbs'},
+    {n:'Cuajada',q:0.11,u:'lbs'},{n:'Queso seco',q:0.13,u:'lbs'},{n:'Crema agria',q:1,u:'pote'},
+    {n:'Mantequilla',q:0.13,u:'lbs'},{n:'Queso crema',q:0.22,u:'lbs'},
+  ]},
+  {key:'frutos',emoji:'🥑',label:'Frutos Vegetales',items:[
+    {n:'Aguacate',q:1,u:'unidad'},{n:'Tomate',q:5,u:'unidades'},{n:'Pepino',q:3,u:'unidades'},
+    {n:'Chiltoma',q:4,u:'unidades'},{n:'Ayote',q:1,u:'unidad'},{n:'Chayote',q:0.5,u:'unidad'},
+    {n:'Chile jalapeno',q:2,u:'unidades'},{n:'Pipian',q:1,u:'unidad'},{n:'Vainitas',q:2,u:'manojos'},{n:'Aceitunas',q:1,u:'frasco'},
+  ]},
+  {key:'grasas',emoji:'🫒',label:'Grasas',items:[
+    {n:'Aceite de oliva',q:0,u:'segun uso'},{n:'Aceite de coco',q:0,u:'segun uso'},{n:'Aceite',q:0,u:'segun uso'},
+  ]},
+  {key:'cond',emoji:'🌿',label:'Condimentos',items:[
+    {n:'Ajo',q:9,u:'dientes'},{n:'Cebolla',q:2,u:'unidades'},{n:'Limon',q:6,u:'unidades'},
+    {n:'Cilantro',q:0.75,u:'manojo'},{n:'Comino',q:0,u:'segun uso'},{n:'Oregano',q:0,u:'segun uso'},
+    {n:'Adobo seco',q:0,u:'segun uso'},{n:'Vinagre',q:0,u:'segun uso'},
+  ]},
+];
+
+/* ===== RECIPES ===== */
+const RECIPES=[
+  {name:'Revuelta de huevos con jamon y queso',cat:'Huevos',emoji:'🍳',p:36,c:3,req:['Huevos','Jamon de pavo'],opt:['Queso seco','Chiltoma'],ing:[{n:'Huevos',a:3,u:'unidades'},{n:'Jamon de pavo',a:60,u:'g'},{n:'Chiltoma',a:0.5,u:'unidad'},{n:'Queso seco',a:30,u:'g'}]},
+  {name:'Huevos con chorizo criollo',cat:'Huevos',emoji:'🍳',p:32,c:3,req:['Huevos','Chorizo criollo'],opt:['Chiltoma'],ing:[{n:'Huevos',a:3,u:'unidades'},{n:'Chorizo criollo',a:60,u:'g'},{n:'Chiltoma',a:0.5,u:'unidad'}]},
+  {name:'Omelette con jamon y chile',cat:'Huevos',emoji:'🍳',p:36,c:3,req:['Huevos','Jamon de pavo'],opt:['Chile jalapeno'],ing:[{n:'Huevos',a:3,u:'unidades'},{n:'Jamon de pavo',a:80,u:'g'},{n:'Chile jalapeno',a:1,u:'unidad'}]},
+  {name:'Huevos revueltos con tocino',cat:'Huevos',emoji:'🍳',p:30,c:2,req:['Huevos','Tocino'],opt:['Aguacate'],ing:[{n:'Huevos',a:3,u:'unidades'},{n:'Tocino',a:3,u:'tiras'},{n:'Aguacate',a:0.5,u:'unidad'}]},
+  {name:'Bistec a la plancha con ensalada',cat:'Res',emoji:'🥩',p:44,c:6,req:['Bistec de res'],opt:['Tomate','Pepino','Limon','Repollo'],ing:[{n:'Bistec de res',a:0.40,u:'lbs'},{n:'Tomate',a:1,u:'unidad'},{n:'Pepino',a:0.5,u:'unidad'},{n:'Limon',a:1,u:'unidad'}]},
+  {name:'Lomo en tiras con cebolla y tomate',cat:'Res',emoji:'🥩',p:42,c:7,req:['Lomo de res','Cebolla'],opt:['Tomate','Chile jalapeno','Ajo'],ing:[{n:'Lomo de res',a:0.40,u:'lbs'},{n:'Cebolla',a:0.5,u:'unidad'},{n:'Tomate',a:1,u:'unidad'},{n:'Chile jalapeno',a:1,u:'unidad'},{n:'Ajo',a:2,u:'dientes'}]},
+  {name:'Higado encebollado con tomate',cat:'Res',emoji:'🥩',p:40,c:7,req:['Higado de res','Cebolla'],opt:['Tomate','Ajo','Aceite de oliva'],ing:[{n:'Higado de res',a:0.40,u:'lbs'},{n:'Cebolla',a:1,u:'unidad'},{n:'Tomate',a:1,u:'unidad'},{n:'Ajo',a:2,u:'dientes'}]},
+  {name:'Churrasco con aguacate y aceitunas',cat:'Res',emoji:'🥩',p:46,c:6,req:['Churrasco'],opt:['Aguacate','Tomate','Aceitunas','Limon'],ing:[{n:'Churrasco',a:0.44,u:'lbs'},{n:'Aguacate',a:0.5,u:'unidad'},{n:'Tomate',a:1,u:'unidad'},{n:'Aceitunas',a:0.25,u:'taza'},{n:'Limon',a:1,u:'unidad'}]},
+  {name:'Carne molida con huevo y cuajada',cat:'Res',emoji:'🥩',p:46,c:3,req:['Carne molida de res','Huevos'],opt:['Chiltoma','Ajo','Cuajada'],ing:[{n:'Carne molida de res',a:0.33,u:'lbs'},{n:'Huevos',a:2,u:'unidades'},{n:'Cuajada',a:50,u:'g'},{n:'Chiltoma',a:0.5,u:'unidad'},{n:'Ajo',a:2,u:'dientes'}]},
+  {name:'Chuleta de cerdo a la plancha',cat:'Cerdo',emoji:'🐷',p:44,c:2,req:['Chuleta de cerdo'],opt:['Ajo','Limon','Adobo seco'],ing:[{n:'Chuleta de cerdo',a:0.44,u:'lbs'},{n:'Ajo',a:2,u:'dientes'},{n:'Limon',a:1,u:'unidad'}]},
+  {name:'Lomo de cerdo con chiltoma',cat:'Cerdo',emoji:'🐷',p:46,c:4,req:['Lomo de cerdo'],opt:['Chiltoma','Ajo','Cebolla'],ing:[{n:'Lomo de cerdo',a:0.44,u:'lbs'},{n:'Chiltoma',a:1,u:'unidad'},{n:'Ajo',a:2,u:'dientes'},{n:'Cebolla',a:0.5,u:'unidad'}]},
+  {name:'Pechuga a la plancha',cat:'Ave',emoji:'🍗',p:50,c:4,req:['Pechuga de pollo'],opt:['Tomate','Pepino','Limon'],ing:[{n:'Pechuga de pollo',a:0.44,u:'lbs'},{n:'Limon',a:1,u:'unidad'},{n:'Ajo',a:2,u:'dientes'}]},
+  {name:'Pollo desmenuzado con chayote',cat:'Ave',emoji:'🍗',p:42,c:8,req:['Muslo de pollo','Chayote'],opt:['Ajo','Mantequilla','Limon'],ing:[{n:'Muslo de pollo',a:0.40,u:'lbs'},{n:'Chayote',a:0.5,u:'unidad'},{n:'Ajo',a:3,u:'dientes'},{n:'Mantequilla',a:1,u:'cda'}]},
+  {name:'Muslo de pollo con chiltoma y cebolla',cat:'Ave',emoji:'🍗',p:40,c:5,req:['Muslo de pollo','Chiltoma'],opt:['Cebolla','Cilantro','Limon','Ajo'],ing:[{n:'Muslo de pollo',a:0.44,u:'lbs'},{n:'Chiltoma',a:1,u:'unidad'},{n:'Cebolla',a:0.5,u:'unidad'},{n:'Cilantro',a:0.25,u:'manojo'},{n:'Limon',a:1,u:'unidad'}]},
+  {name:'Camaron al ajillo con limón',cat:'Mariscos',emoji:'🐟',p:40,c:3,req:['Camaron','Ajo'],opt:['Mantequilla','Limon','Cilantro'],ing:[{n:'Camaron',a:0.44,u:'lbs'},{n:'Ajo',a:4,u:'dientes'},{n:'Mantequilla',a:1,u:'cda'},{n:'Limon',a:1,u:'unidad'},{n:'Cilantro',a:0.25,u:'manojo'}]},
+  {name:'Tilapia a la plancha con limón',cat:'Mariscos',emoji:'🐟',p:40,c:2,req:['Tilapia','Limon'],opt:['Ajo','Cilantro','Pepino'],ing:[{n:'Tilapia',a:0.44,u:'lbs'},{n:'Limon',a:1,u:'unidad'},{n:'Ajo',a:2,u:'dientes'},{n:'Cilantro',a:0.25,u:'manojo'}]},
+  {name:'Corvina a la plancha',cat:'Mariscos',emoji:'🐟',p:42,c:2,req:['Corvina'],opt:['Limon','Ajo','Cilantro'],ing:[{n:'Corvina',a:0.44,u:'lbs'},{n:'Limon',a:1,u:'unidad'},{n:'Ajo',a:2,u:'dientes'}]},
+  {name:'Atun con tomate y aceitunas',cat:'Mariscos',emoji:'🐟',p:30,c:5,req:['Atun en lata','Tomate'],opt:['Chiltoma','Aceitunas','Limon'],ing:[{n:'Atun en lata',a:1,u:'lata'},{n:'Tomate',a:1,u:'unidad'},{n:'Chiltoma',a:0.5,u:'unidad'},{n:'Aceitunas',a:0.25,u:'taza'},{n:'Limon',a:1,u:'unidad'}]},
+  {name:'Requeson con tomate y aguacate',cat:'Lacteos',emoji:'🧀',p:18,c:5,req:['Requesón','Tomate'],opt:['Aguacate','Limon'],ing:[{n:'Requesón',a:150,u:'g'},{n:'Tomate',a:1,u:'unidad'},{n:'Aguacate',a:0.5,u:'unidad'},{n:'Limon',a:0.5,u:'unidad'}]},
+  {name:'Yogur griego con pepino',cat:'Lacteos',emoji:'🥛',p:20,c:8,req:['Yogur griego','Pepino'],opt:['Ajo','Limon'],ing:[{n:'Yogur griego',a:200,u:'g'},{n:'Pepino',a:0.5,u:'unidad'},{n:'Limon',a:0.5,u:'unidad'}]},
+  {name:'Sardinas con tomate y pepino',cat:'Mariscos',emoji:'🐟',p:30,c:4,req:['Sardinas en lata','Tomate'],opt:['Pepino','Limon','Aceitunas'],ing:[{n:'Sardinas en lata',a:1,u:'lata'},{n:'Tomate',a:1,u:'unidad'},{n:'Pepino',a:0.5,u:'unidad'},{n:'Limon',a:1,u:'unidad'}]},
+];
+
+/* ===== STATE ===== */
+const S={
+  week:'week1',day:0,view:'menu',
+  unavail:new Set(),freq:'semanal',checked:new Set(),
+  avail:new Set(),persons:1,editMode:false,
+  cats:JSON.parse(JSON.stringify(CATS)),
+};
+
+/* ===== HELPERS ===== */
+function today(){const d=new Date().getDay();return({1:0,2:1,3:2,4:3,5:4})[d]||0;}
+function ico(c){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="'+c+'"><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.528 5.855L.061 23.48l5.88-1.523A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm5.406 16.496c-.297-.148-1.755-.866-2.027-.965-.272-.099-.47-.148-.668.149-.198.297-.766.965-.939 1.163-.173.198-.346.223-.643.074-.297-.148-1.252-.461-2.386-1.473-.882-.787-1.477-1.758-1.651-2.055-.173-.297-.018-.457.13-.605.133-.133.297-.346.445-.52.149-.173.198-.297.297-.495.099-.198.05-.372-.025-.52-.074-.149-.668-1.609-.915-2.204-.24-.578-.486-.5-.668-.509-.173-.008-.37-.01-.569-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479s1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.307 1.263.49 1.694.626.711.226 1.36.194 1.872.118.571-.085 1.757-.718 2.005-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.569-.347z"/></svg>';}
+
+/* Parse ingredient amount */
+function parseIngAmt(c,u){
+  const s=c.toString().trim();
+  if(s.includes('/')){const p=s.split('/');return{q:parseFloat(p[0])/parseFloat(p[1]),u:u||''};}
+  if(/^\d+g$/.test(s)){return{q:parseFloat(s),u:'g'};}
+  if(/^\d+\.?\d*\s*(cda|cdta|taza|pizca|manojo)/.test(s)){return{q:0,u:''};}
+  return{q:parseFloat(s)||0,u:u||''};
+}
+
+const ING_ALIAS={'Pollo (muslo/pechuga)':'Muslo de pollo','Brocoli':'Brocoli','Atun en lata':'Atun en lata'};
+
+function getMenuNeeds(){
+  const needs={};
+  MENUS[S.week].forEach(day=>{
+    day.comidas.forEach(meal=>{
+      meal.ing.forEach(ing=>{
+        const name=ING_ALIAS[ing.n]||ing.n;
+        const parsed=parseIngAmt(ing.c,ing.u);
+        if(parsed.q===0)return;
+        if(!needs[name]){needs[name]={q:0,u:parsed.u};}
+        if(needs[name].u===parsed.u||needs[name].q===0){
+          needs[name].q+=parsed.q;
+          if(needs[name].u==='')needs[name].u=parsed.u;
+        }
+      });
+    });
+  });
+  Object.keys(needs).forEach(n=>{
+    const it=needs[n];
+    if(it.u==='lbs'){it.q=Math.round(it.q*10)/10;}
+    else if(it.u==='unidad'||it.u==='unidades'){it.q=Math.ceil(it.q);}
+    else if(it.u==='g'){it.q=Math.ceil(it.q/50)*50;}
+    else if(it.u==='dientes'){it.q=Math.ceil(it.q/10);it.u='cabeza(s)';}
+  });
+  return needs;
+}
+
+function calcQty(item){
+  const weeks=S.freq==='quincenal'?2:1;
+  const mn=getMenuNeeds()[item.n];
+  if(mn&&mn.q>0){
+    const total=mn.u==='g'?Math.ceil(mn.q*S.persons*weeks)+'g':Math.round(mn.q*S.persons*weeks*10)/10+' '+mn.u;
+    return{val:total,su:false};
+  }
+  if(item.q===0)return{val:'segun uso',su:true};
+  const total=Math.round(item.q*S.persons*weeks*10)/10;
+  return{val:total+' '+item.u,su:false};
+}
+
+/* ===== RENDER ===== */
+function render(){document.getElementById('app').innerHTML=build();}
+
+function build(){
+  const tabs=[['menu','🍽 Menu'],['sugerencias','🔍 Sugerir'],['ingredientes','📋 Ingred.'],['compras','🛒 Compras']];
+  return '<div class="hdr"><div class="hdr-inner"><div class="hdr-top"><div><div class="brand-s">Sistema Nodulis</div><div class="brand">Menu Diario</div></div><div style="text-align:right"><div class="week-lbl">'+(S.week==='week1'?'Semana 1':'Semana 2 🐟')+'</div><button class="week-btn" onclick="sw()">cambiar semana</button></div></div><div class="tabs">'+tabs.map(t=>'<button class="tab '+(S.view===t[0]?'active':'')+'" onclick="sv(\''+t[0]+'\')">'+t[1]+'</button>').join('')+'</div></div></div><div class="content"><div class="view">'+(S.view==='menu'?vMenu():S.view==='sugerencias'?vSug():S.view==='ingredientes'?vIng():vCompras())+'</div></div>';
+}
+
+/* ===== MENU ===== */
+function vMenu(){
+  const d=MENUS[S.week][S.day];
+  const tp=d.comidas.reduce((s,c)=>s+c.p,0);
+  const tc=d.comidas.reduce((s,c)=>s+c.c,0);
+  const subKeys=[...new Set(d.comidas.flatMap(c=>c.ing.filter(i=>i.sub).map(i=>i.sub)))];
+  let h='<div class="day-bar">'+DAYS_FULL.map((nm,i)=>{const isC=CREATIVE_DAYS.includes(i);return'<button class="day-btn '+(S.day===i?'active ':'')+( isC?'creative':'')+'" onclick="sd('+i+')">'+nm.slice(0,3).toUpperCase()+'</button>';}).join('')+'</div>';
+  h+='<div class="day-hdr"><span class="day-title">'+DAYS_FULL[S.day]+'</span>'+(d.gymDay?'<span class="tag tag-gym">⚡ Pre-entreno</span>':'')+(d.marina?'<span class="tag tag-marina">🐟 Marina</span>':'')+(d.creative?'<span class="tag tag-creative">✨ Creativo</span>':'')+'</div>';
+  h+='<div class="macros"><div class="macro" style="background:#3a4a1e"><div class="macro-val" style="color:#fff">'+tp+'g</div><div class="macro-lbl" style="color:#a8c878">proteina</div></div><div class="macro" style="background:#5e7434"><div class="macro-val" style="color:#fff">'+tc+'g</div><div class="macro-lbl" style="color:#c8e0a0">carbs</div></div><div class="macro" style="background:#141414;border:1px solid #2a2a2a"><div class="macro-val" style="color:#666">~150g</div><div class="macro-lbl" style="color:#444">objetivo</div></div></div>';
+  const accents=['#c8a96e','#6a5a3a','#3a3a3a'];
+  h+=d.comidas.map((c,i)=>'<div class="meal-card"><div class="meal-accent" style="background:'+accents[i]+'"></div><div class="meal-inner"><div class="meal-top"><div class="meal-name">'+c.icono+' '+c.nombre+'</div><div class="meal-prot-box"><div class="meal-prot">'+c.p+'g</div><div class="meal-prot-lbl">proteina</div></div></div>'+c.desc.map(x=>'<div class="meal-item">'+x+'</div>').join('')+'<div class="meal-carbs">CARBS: '+c.c+'g</div></div></div>').join('');
+  if(subKeys.length){
+    h+='<div class="sub-section"><div class="sec-lbl">¿Que no hay hoy?</div><div class="sub-chips">'+subKeys.map(k=>'<button class="sub-chip '+(S.unavail.has(k)?'unavail':'')+'" onclick="tu(\''+k+'\')">'+SUB[k].emoji+' '+SUB[k].label+'</button>').join('')+'</div>';
+    subKeys.filter(k=>S.unavail.has(k)).forEach(k=>{h+='<div class="sub-panel"><div class="sub-panel-lbl">Sin '+SUB[k].label+' · elegir una</div>'+SUB[k].opts.map(o=>'<div class="sub-opt"><div><div class="sub-opt-name">'+o.n+'</div><div class="sub-opt-qty">'+o.c+'</div></div><div class="sub-opt-nota">'+o.nota+'</div></div>').join('')+'</div>';});
+    h+='</div>';
+  }
+  h+='<div class="rules-box"><div class="rules-lbl">Reglas del dia</div><div class="rule">Eliminar: arroz, tortilla, pan, frijoles, azucar, jugos</div><div class="rule">Hidratacion: 2.5L de agua minimo</div>'+(d.gymDay?'<div class="rule">Pre-entreno: comer 60-90 min antes del gym</div>':'')+'</div>';
+  h+='<button class="wha-btn" onclick="whaMenu()">'+ico('#6abf8a')+' Compartir menu</button>';
+  return h;
+}
+
+/* ===== SUGERENCIAS ===== */
+function vSug(){
+  const matched=matchRecipes();
+  const full=matched.filter(r=>r.missing.length===0);
+  const partial=matched.filter(r=>r.missing.length>0);
+  let h='<div class="v-hdr"><div class="v-title">Sugerencias</div><div class="v-sub">Marca lo que tenes disponible</div></div>';
+  h+=pBar();
+  h+='<div class="edit-bar"><div style="font-size:11px;color:#888;font-family:sans-serif">'+S.avail.size+' ingredientes disponibles</div><button class="edit-mode-btn '+(S.editMode?'on':'')+'" onclick="toggleEdit()">'+(S.editMode?'✓ Listo':'✏ Editar')+'</button></div>';
+  S.cats.forEach(cat=>{
+    const allOn=cat.items.every(i=>S.avail.has(i.n));
+    h+='<div class="cat-block"><div class="cat-lbl"><span>'+cat.emoji+' '+cat.label+'</span><button class="cat-all" onclick="selAll(\''+cat.key+'\')">'+(allOn?'Quitar todos':'Todos')+'</button></div><div class="ing-chips">';
+    cat.items.forEach(item=>{
+      const on=S.avail.has(item.n);
+      h+='<button class="ing-chip '+(on?'on ':'')+( S.editMode?'del-mode':'')+'" onclick="'+(S.editMode?'delIng(\''+cat.key+'\',\''+item.n+'\')':'togIng(\''+item.n+'\')')+'">'+( S.editMode?'✕ ':'')+item.n+'</button>';
+    });
+    h+='</div></div>';
+  });
+  if(S.editMode)h+='<div class="add-row"><input class="add-input" id="nii" placeholder="Nuevo ingrediente..."/><select class="add-cat-sel" id="nci">'+S.cats.map(c=>'<option value="'+c.key+'">'+c.emoji+' '+c.label+'</option>').join('')+'</select><button class="add-btn" onclick="addIng()">+</button></div>';
+  if(!S.avail.size){h+='<div class="no-sel">Selecciona ingredientes arriba<br>para ver sugerencias</div>';return h;}
+  if(full.length)h+='<div class="results-hdr">✅ Podes preparar ahora ('+full.length+')</div>'+full.map(rCard).join('');
+  if(partial.length)h+='<div class="results-hdr">⚡ Casi completo ('+partial.length+')</div>'+partial.map(rCard).join('');
+  if(!full.length&&!partial.length)h+='<div class="no-sel">Sin coincidencias.<br>Agrega mas ingredientes.</div>';
+  return h;
+}
+
+function pBar(){return'<div class="persons-bar"><div class="persons-lbl">Personas</div><button class="persons-btn" onclick="pp(-1)">−</button><div class="persons-val">'+S.persons+'</div><button class="persons-btn" onclick="pp(1)">+</button></div>';}
+
+function rCard(r){
+  const isFull=r.missing.length===0;
+  const availIng=r.ing.filter(i=>S.avail.has(i.n));
+  const missingIng=r.ing.filter(i=>!S.avail.has(i.n)).map(i=>i.n);
+  let h='<div class="recipe-card '+(isFull?'full':'partial')+'"><div class="recipe-badge '+(isFull?'badge-full':'badge-partial')+'">'+(isFull?'Completo':'Parcial')+'</div>';
+  h+='<div class="recipe-name">'+r.emoji+' '+r.name+'</div><div class="recipe-cat">'+r.cat+'</div>';
+  h+='<div class="r-macros"><div class="r-mac"><div class="r-mac-val">'+(r.p*S.persons)+'g</div><div class="r-mac-lbl">proteina</div></div><div class="r-mac"><div class="r-mac-val">'+(r.c*S.persons)+'g</div><div class="r-mac-lbl">carbs</div></div><div class="r-mac"><div class="r-mac-val">'+S.persons+'</div><div class="r-mac-lbl">'+(S.persons===1?'persona':'personas')+'</div></div></div>';
+  h+=availIng.map(i=>'<div class="r-ing-row"><div class="r-ing-name">'+i.n+'</div><div class="r-ing-amt">'+(Math.round(i.a*S.persons*10)/10)+' '+i.u+'</div></div>').join('');
+  if(missingIng.length)h+='<div class="recipe-missing">Opcional no disponible: '+missingIng.join(', ')+'</div>';
+  h+='<button class="recipe-wha" onclick="whaRecipe(\''+r.name.replace(/'/g,"\\'")+'\')" >'+ico('#6abf8a')+' Compartir receta</button></div>';
+  return h;
+}
+
+function matchRecipes(){
+  return RECIPES.map(r=>{
+    const reqMissing=r.req.filter(n=>!S.avail.has(n));
+    if(reqMissing.length)return null;
+    const ingMissing=r.ing.filter(i=>!S.avail.has(i.n)).map(i=>i.n);
+    return Object.assign({},r,{missing:ingMissing});
+  }).filter(r=>r&&r.missing.length<=2).sort((a,b)=>a.missing.length-b.missing.length);
+}
+
+/* ===== INGREDIENTES ===== */
+function vIng(){
+  const d=MENUS[S.week][S.day];
+  let h='<div class="v-hdr"><div class="v-title">'+DAYS_FULL[S.day]+'</div><div class="v-sub">Ingredientes del dia</div></div>';
+  d.comidas.forEach(c=>{
+    h+='<div class="ing-card"><div class="ing-meal-hdr">'+c.icono+' '+c.nombre+'</div>';
+    c.ing.forEach(ing=>{
+      const cr=ing.sub&&S.unavail.has(ing.sub);
+      h+='<div class="ing-row"><div><div class="ing-name'+(cr?' crossed':'')+'">'+ing.n+'</div>'+(cr?'<div style="font-size:10px;color:#886644;font-family:sans-serif">Ver sustituto en Menu</div>':'')+'</div><div><div class="ing-amt">'+ing.c+'</div>'+(ing.u?'<div class="ing-unit">'+ing.u+'</div>':'')+'</div></div>';
+    });
+    h+='</div>';
+  });
+  h+='<div style="display:flex;gap:8px;margin-top:16px">';
+  h+='<button class="wha-btn" style="flex:1;margin-top:0" onclick="whaMenu()">'+ico('#6abf8a')+' WhatsApp</button>';
+  h+='<button class="wha-btn" style="flex:1;margin-top:0;background:#0a0a18;border-color:#2a2a4a;color:#6a8abf" onclick="whaEmail()">✉ Email</button>';
+  h+='</div>';
+  return h;
+}
+
+/* ===== COMPRAS ===== */
+function vCompras(){
+  let h='<div class="v-hdr"><div class="v-title">Lista de Compras</div><div class="v-sub">Lo que no tenes disponible</div></div>';
+  h+=pBar();
+  h+='<div class="freq-toggle"><button class="freq-btn '+(S.freq==='semanal'?'active':'')+'" onclick="sf(\'semanal\')">Semanal</button><button class="freq-btn '+(S.freq==='quincenal'?'active':'')+'" onclick="sf(\'quincenal\')">Quincenal</button></div>';
+  if(!S.avail.size){h+='<div class="empty-shop">Ve a <strong style="color:#c8a96e">🔍 Sugerir</strong><br>y marca lo que ya tenes.<br>Lo que no tenes aparece aqui.</div>';return h;}
+  let hasItems=false;
+  S.cats.forEach(cat=>{
+    const need=cat.items.filter(i=>!S.avail.has(i.n));
+    if(!need.length)return;
+    hasItems=true;
+    h+='<div class="shop-card"><div class="shop-cat">'+cat.emoji+' '+cat.label+'</div>';
+    need.forEach(item=>{
+      const k='sh_'+item.n;
+      const chk=S.checked.has(k);
+      const qty=calcQty(item);
+      h+='<div class="shop-row '+(chk?'chk':'')+'" onclick="tc(\''+k+'\')"><div class="chk-box '+(chk?'done':'')+'">'+( chk?'✓':'')+'</div><div class="shop-name">'+item.n+'</div><div class="shop-qty'+(qty.su?' su':'')+'">'+qty.val+'</div></div>';
+    });
+    h+='</div>';
+  });
+  if(!hasItems)h+='<div class="empty-shop">🎉 Todo disponible</div>';
+  return h;
+}
+
+/* ===== ACTIONS ===== */
+function sw(){S.week=S.week==='week1'?'week2':'week1';render();}
+function sv(v){S.view=v;render();}
+function sd(d){S.day=d;render();}
+function tu(k){S.unavail.has(k)?S.unavail.delete(k):S.unavail.add(k);render();}
+function sf(f){S.freq=f;render();}
+function tc(k){S.checked.has(k)?S.checked.delete(k):S.checked.add(k);render();}
+function pp(n){S.persons=Math.max(1,Math.min(10,S.persons+n));render();}
+function togIng(i){S.avail.has(i)?S.avail.delete(i):S.avail.add(i);render();}
+function selAll(key){
+  const cat=S.cats.find(c=>c.key===key);if(!cat)return;
+  const allOn=cat.items.every(i=>S.avail.has(i.n));
+  cat.items.forEach(i=>allOn?S.avail.delete(i.n):S.avail.add(i.n));render();
+}
+function toggleEdit(){S.editMode=!S.editMode;render();}
+function delIng(catKey,name){
+  const cat=S.cats.find(c=>c.key===catKey);
+  if(cat){cat.items=cat.items.filter(i=>i.n!==name);S.avail.delete(name);}render();
+}
+function addIng(){
+  const ni=document.getElementById('nii');
+  const nc=document.getElementById('nci');
+  const val=ni?ni.value.trim():'';
+  const ck=nc?nc.value:'res';
+  if(!val)return;
+  const cat=S.cats.find(c=>c.key===ck);
+  if(cat&&!cat.items.find(i=>i.n===val))cat.items.push({n:val,q:0,u:'segun uso'});
+  render();
+}
+
+/* ===== SHARE ===== */
+function whaMenu(){
+  const d=MENUS[S.week][S.day];
+  const tp=d.comidas.reduce((s,c)=>s+c.p,0);
+  let msg='🥗 *Menu Nodulis · '+DAYS_FULL[S.day]+'*\n_Proteina: ~'+tp+'g_\n\n';
+  d.comidas.forEach(c=>{msg+='*'+c.icono+' '+c.nombre+'*\n';c.desc.forEach(x=>{msg+='• '+x+'\n';});msg+='\n';});
+  msg+='📱 App: '+APP_URL;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+function whaRecipe(name){
+  const r=RECIPES.find(x=>x.name===name);if(!r)return;
+  let msg='🍽 *'+r.name+'*'+(S.persons>1?' ('+S.persons+' personas)':'')+'\n'+r.p*S.persons+'g proteina · '+r.c*S.persons+'g carbs\n\n';
+  r.ing.filter(i=>S.avail.has(i.n)).forEach(i=>{msg+='• '+i.n+': '+(Math.round(i.a*S.persons*10)/10)+' '+i.u+'\n';});
+  msg+='\n📱 App: '+APP_URL;
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+function whaEmail(){
+  const d=MENUS[S.week][S.day];
+  const tp=d.comidas.reduce((s,c)=>s+c.p,0);
+  let body='Menu Nodulis - '+DAYS_FULL[S.day]+'\nProteina: ~'+tp+'g\n\n';
+  d.comidas.forEach(c=>{body+=c.nombre+'\n';c.desc.forEach(x=>{body+='- '+x+'\n';});body+='\n';});
+  body+='App: '+APP_URL;
+  window.location.href='mailto:?subject=Menu Nodulis - '+DAYS_FULL[S.day]+'&body='+encodeURIComponent(body);
+}
+
+S.day=today();
+render();
+</script>
+</body>
+</html>
